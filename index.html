@@ -46,6 +46,7 @@ button{font:inherit;color:inherit}
 .cu .n small{display:block;font-size:12px;letter-spacing:.14em;color:var(--ink3);font-weight:600;margin-bottom:4px}
 .cu .s{grid-area:s;justify-self:start}
 .cu .d{grid-area:d;font-size:12.5px;color:var(--ink3)}
+.cu .svc{list-style:none;margin:4px 0 0;padding:0;display:grid;gap:3px}.cu .svc li{display:flex;flex-wrap:wrap;align-items:baseline;gap:0 8px;text-transform:none;letter-spacing:0}.cu .svc li b{display:inline;font-size:14.5px;margin:0}.cu .svc li span{font-size:12px;font-weight:500;color:var(--ink3)}
 .cu .cap{grid-area:c;margin-top:8px;font-size:11px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--ink3)}.cu .cap b{display:block;font-size:15px;letter-spacing:0;text-transform:none;color:var(--ink);font-weight:600;margin-top:1px}
 .cu .t{grid-area:t;display:flex;align-items:baseline;justify-content:space-between;border-top:1px solid var(--line);padding-top:10px;margin-top:8px}
 .cu .t b{font-family:var(--cond);font-size:26px;font-weight:700}
@@ -234,7 +235,7 @@ const total=i=>CONF.modo==='man'?buildMan(i).reduce((a,x)=>a+x.tot,0):build(i).r
 $('upd').innerHTML=`Pueble al<b>${esc(D.fecha||'—')}</b>`;
 $('ft').textContent=`Fuente: PUEBLE ARANZAZU.xlsx, hoja ${CONF.hoja} · actualizado el ${D.fecha||'—'} · periodo ${D.periodo||'—'}. Solo personal asignado; no aparecen vacantes, Stand by ni canceladas.`;
 $('cuads').innerHTML=CU.map(c=>{const t=turno(c.i),rest=/Descanso/i.test(t);
- return `<button class="cu" type="button" data-i="${c.i}" style="--cc:${c.c}"><div class="n"><small>CUADRILLA</small>${c.n}</div><span class="s chip${rest?' rest':''}">${esc(rest?'Descanso':'En turno · '+t)}</span><div class="d">${esc(fechas(c.i))}</div>${(m=>m?`<div class="cap">${esc(rol(m.c))}<b>${esc(tc(m.n))}</b></div>`:'')(mandos(c.i)[0])}<div class="t"><b>${total(c.i)}<small>personas</small></b><span>Ver personal →</span></div></button>`}).join('');
+ return `<button class="cu" type="button" data-i="${c.i}" style="--cc:${c.c}"><div class="n"><small>CUADRILLA</small>${c.n}</div><span class="s chip${rest?' rest':''}">${esc(rest?'Descanso':'En turno · '+t)}</span><div class="d">${esc(fechas(c.i))}</div>${CONF.modo==='man'?(S=>S.length?`<div class="cap">Supervisores<ul class="svc">${S.map(m=>`<li><b>${esc(tc(m.n))}</b><span>${esc(tc(String(m.c).replace(/^\s*SUPERVISOR(A)?\s+(DE\s+)?/i,'')))}</span></li>`).join('')}</ul></div>`:'')(mandos(c.i).filter(m=>/^SUPERVISOR/.test(nz(m.c)))):(m=>m?`<div class="cap">${esc(rol(m.c))}<b>${esc(tc(m.n))}</b></div>`:'')(mandos(c.i)[0])}<div class="t"><b>${total(c.i)}<small>personas</small></b><span>Ver personal →</span></div></button>`}).join('');
 
 let CUR=null;
 function hl(s,q){const t=tc(s);if(!q)return esc(t);const k=nz(t),at=k.indexOf(q);return at<0?esc(t):esc(t.slice(0,at))+'<mark>'+esc(t.slice(at,at+q.length))+'</mark>'+esc(t.slice(at+q.length))}
